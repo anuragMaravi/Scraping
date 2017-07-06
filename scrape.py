@@ -71,7 +71,6 @@ print "Creating CSV"
 df = pd.DataFrame(data, columns=['Date','Soil Moisture'])
 df.to_csv('soil.csv', index = False)
 print "csv created as: soil.csv"
-print "csv created"
 
 driver.quit()
 
