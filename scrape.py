@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 import numpy as np
+import pandas as pd
 
 
 print "Scarping Started"
@@ -29,17 +30,17 @@ region_click = driver.find_element_by_xpath('//*[@id="OpenLayers_Layer_WMS_39"]/
 # location = region_click.location
 # print location
 ac = ActionChains(driver)
-ac.move_to_element(region_click).move_by_offset(6, -10) #Use this offset to locate the accurate latitude and longitude
+ac.move_to_element(region_click).move_by_offset(5, -10) #Use this offset to locate the accurate latitude and longitude
 ac.click()
 ac.perform()
 
-time.sleep(2)
+time.sleep(5)
 
 #Click on the 'Get Trend'
 get_trend = driver.find_element_by_xpath('//*[@id="chicken_contentDiv"]/table/tbody/tr[5]/td/a/b')
 get_trend.click()
 
-time.sleep(15)
+time.sleep(25)
 
 #Hover over the trend
 trend = driver.find_element_by_xpath('//*[@id="stepplot"]/div/canvas[2]')
@@ -49,17 +50,29 @@ ac2.move_to_element(trend)
 
 # Use X = -186 for Start date
 # Use X = 215 for End Date
-date_range = np.arange(-186, -180, 1) #Set the start and end date here
+date_range = np.arange(-186, 215, 1) #Set the start and end date here
 data = []
+list_reading = []
+print "Reading Data"
 for i in date_range:
 	ac2.move_to_element(trend).move_by_offset(i, 0)
 	ac2.perform()
-	#Xpath for getting date
-	date = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
-	data.append(date.text)
+	#Xpath for getting readings
+	reading = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
+	print reading.text
+	date, moisture = reading.text.split(': Surface Soil Moisture: ', 1)
+	data.append([date, float(moisture)])
+
 
 #Use data to do something
 print "Scraping Completed"
+
+print "Creating CSV"
+df = pd.DataFrame(data, columns=['Date','Soil Moisture'])
+df.to_csv('soil.csv', index = False)
+print "csv created as: soil.csv"
+print "csv created"
+
 driver.quit()
 
 
