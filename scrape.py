@@ -2,6 +2,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
+import numpy as np
 
 
 print "Scarping Started"
@@ -46,18 +47,19 @@ ac2 = ActionChains(driver)
 ac2.move_to_element(trend)
 ac2.move_to_element(trend)
 
-ac2.move_to_element(trend).move_by_offset(-100, 0) #Change x value to get the moisture for different days
-ac2.perform()
-#Xpath for getting date
-date = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
-print date.text
+# Use X = -186 for Start date
+# Use X = 215 for End Date
+date_range = np.arange(-186, -180, 1) #Set the start and end date here
+data = []
+for i in date_range:
+	ac2.move_to_element(trend).move_by_offset(i, 0)
+	ac2.perform()
+	#Xpath for getting date
+	date = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
+	data.append(date.text)
 
-ac2.move_to_element(trend).move_by_offset(-200, 0) #Change x value to get the moisture for different days
-ac2.perform()
-#Xpath for getting date
-date = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
-print date.text
+#Use data to do something
+print "Scraping Completed"
+driver.quit()
 
 
-
-# driver.quit()
