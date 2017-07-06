@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-
+print "Scarping Started"
 driver = webdriver.Chrome()
 driver.get('http://bhuvan.nrsc.gov.in/nices/#InteractiveView') #Url for the site to scrape
 
@@ -38,5 +38,26 @@ time.sleep(2)
 get_trend = driver.find_element_by_xpath('//*[@id="chicken_contentDiv"]/table/tbody/tr[5]/td/a/b')
 get_trend.click()
 
-# time.sleep(5)
+time.sleep(15)
+
+#Hover over the trend
+trend = driver.find_element_by_xpath('//*[@id="stepplot"]/div/canvas[2]')
+ac2 = ActionChains(driver)
+ac2.move_to_element(trend)
+ac2.move_to_element(trend)
+
+ac2.move_to_element(trend).move_by_offset(-100, 0) #Change x value to get the moisture for different days
+ac2.perform()
+#Xpath for getting date
+date = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
+print date.text
+
+ac2.move_to_element(trend).move_by_offset(-200, 0) #Change x value to get the moisture for different days
+ac2.perform()
+#Xpath for getting date
+date = driver.find_element_by_xpath('//*[@id="stepplot"]/div/div[2]')
+print date.text
+
+
+
 # driver.quit()
